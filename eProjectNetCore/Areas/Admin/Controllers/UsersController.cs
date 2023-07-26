@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using eProjectNetCore.Data;
 using eProjectNetCore.Models;
+using X.PagedList;
 
 namespace eProjectNetCore.Areas.Admin.Controllers
 {
@@ -21,10 +22,15 @@ namespace eProjectNetCore.Areas.Admin.Controllers
         }
 
         // GET: Admin/Users
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(String name, int page = 1)
         {
-            var appDbContext = _context.User.Include(u => u.Group);
-            return View(await appDbContext.ToListAsync());
+            int limit = 10;
+            var account = await _context.User.OrderBy(a => a.Id).ToPagedListAsync(page, limit);
+            if (!String.IsNullOrEmpty(name))
+            {
+                account = await _context.User.Where(a => a.Name.Contains(name)).OrderBy(a => a.Id).ToPagedListAsync(page, limit);
+            }
+            return View(account);
         }
 
         // GET: Admin/Users/Details/5

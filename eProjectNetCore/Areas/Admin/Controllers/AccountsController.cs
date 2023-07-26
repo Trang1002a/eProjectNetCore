@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using eProjectNetCore.Data;
 using eProjectNetCore.Models;
+using eProjectNetCore.Utils;
+using X.PagedList;
 
 namespace eProjectNetCore.Areas.Admin.Controllers
 {
@@ -21,10 +23,15 @@ namespace eProjectNetCore.Areas.Admin.Controllers
         }
 
         // GET: Admin/Accounts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(String name, int page = 1)
         {
-            var appDbContext = _context.Account.Include(a => a.Class);
-            return View(await appDbContext.ToListAsync());
+            int limit = 10;
+            var account = await _context.Account.OrderBy(a => a.Id).ToPagedListAsync(page, limit);
+            if (!String.IsNullOrEmpty(name))
+            {
+                account = await _context.Account.Where(a => a.Name.Contains(name)).OrderBy(a => a.Id).ToPagedListAsync(page, limit);
+            }
+            return View(account);
         }
 
         // GET: Admin/Accounts/Details/5
@@ -138,8 +145,10 @@ namespace eProjectNetCore.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
-            return View(account);
+            account.Status = "DEACTIVE";
+            _context.Update(account);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Admin/Accounts/Delete/5

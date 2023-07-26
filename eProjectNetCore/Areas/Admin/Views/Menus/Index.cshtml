@@ -1,5 +1,5 @@
-﻿@model IEnumerable<eProjectNetCore.Models.Menu>
-
+﻿@model X.PagedList.IPagedList<eProjectNetCore.Models.Menu>
+@using X.PagedList.Mvc.Core;
 @{
     Layout = "_Admin";
 }
@@ -12,56 +12,73 @@
     <title>Index</title>
 </head>
 <body>
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Link)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Order)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Group)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Link)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Order)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Group.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+    <div>
+        <form action="" method="get" class="form-inline">
+            <div class="form-group w-50">
+                <label class="sr-only" for="">Tìm kiếm</label>
+                <input class="form-control" name="name" placeholder="Nhập tên cần tìm">
+            </div>
+            <div class="my-2">
+                <button type="submit" class="btn btn-success mr-1">Tìm kiếm</button>
+                <a asp-action="Create" class="btn btn-primary"><i class="fas fa-plus"></i> Thêm mới</a>
+            </div>
+        </form>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Link)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Status)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Order)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Group)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Link)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Order)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Group.Id)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }),
+new PagedListRenderOptions
+{
+LiElementClasses = new string[] { "page-item" },
+PageClasses = new string[] { "page-link" }
 }
-    </tbody>
-</table>
+)
 </body>
 </html>

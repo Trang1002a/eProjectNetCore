@@ -2,6 +2,7 @@
 
 @{
     Layout = "_Admin";
+    List<Class> classes = ViewBag.classes;
 }
 
 <!DOCTYPE html>
@@ -51,7 +52,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="ClassId" class="control-label"></label>
-                <select asp-for="ClassId" class ="form-control" asp-items="ViewBag.ClassId"></select>
+                <select asp-for="ClassId" class="form-control" asp-items="ViewBag.ClassId"></select>
+                <span asp-validation-for="ClassId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
