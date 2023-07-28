@@ -13,54 +13,53 @@
 </head>
 <body>
 
-<div>
-    <h4>Competition</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Image)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Image)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Prize)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Prize)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-    </dl>
-</div>
+    <div>
+        <h4>Competition</h4>
+        <hr />
+        <table class="table">
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.Name)</td>
+                <td>@Html.DisplayFor(model => model.Name)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.Image)</td>
+                <td>@Html.DisplayFor(model => model.Image)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.Description)</td>
+                <td>@Html.DisplayFor(model => model.Description)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.StartDate)</td>
+                <td>@Html.DisplayFor(model => model.StartDate)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.Image)</td>
+                <td><img src="../../@Html.DisplayFor(model => model.Image)" width="60" /></td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.EndDate)</td>
+                <td>@Html.DisplayFor(model => model.EndDate)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.Prize)</td>
+                <td>@Html.DisplayFor(model => model.Prize)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.Status)</td>
+                <td>
+                    @if (@Html.DisplayFor(model => model.Status).Equals("ACTIVE"))
+                    {
+                        <span>DEACTIVE</span>
+                    }
+                    else
+                    {
+                        <span>ACTIVE</span>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using eProjectNetCore.Data;
 using eProjectNetCore.Models;
 using X.PagedList;
+using System.IO;
 
 namespace eProjectNetCore.Areas.Admin.Controllers
 {
@@ -66,6 +67,19 @@ namespace eProjectNetCore.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                var files = HttpContext.Request.Form.Files;
+
+                if (files.Count() > 0 && files[0].Length > 0)
+                {
+                    var file = files[0];
+                    var FileName = file.FileName;
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\admin\\images\\competition", FileName);
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                        competition.Image = "images/competition/" + FileName;
+                    }
+                }
                 _context.Add(competition);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -105,6 +119,19 @@ namespace eProjectNetCore.Areas.Admin.Controllers
             {
                 try
                 {
+                    var files = HttpContext.Request.Form.Files;
+
+                    if (files.Count() > 0 && files[0].Length > 0)
+                    {
+                        var file = files[0];
+                        var FileName = file.FileName;
+                        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\admin\\images\\competition", FileName);
+                        using (var stream = new FileStream(path, FileMode.Create))
+                        {
+                            file.CopyTo(stream);
+                            competition.Image = "images/competition/" + FileName;
+                        }
+                    }
                     _context.Update(competition);
                     await _context.SaveChangesAsync();
                 }

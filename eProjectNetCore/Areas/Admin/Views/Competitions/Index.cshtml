@@ -34,9 +34,6 @@
                     @Html.DisplayNameFor(model => model.FirstOrDefault().Image)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
-                </th>
-                <th>
                     @Html.DisplayNameFor(model => model.FirstOrDefault().StartDate)
                 </th>
                 <th>
@@ -54,34 +51,38 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Image)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StartDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EndDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Prize)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Status)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    <img src="@item.Image" alt="@item.Image" width="60" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Prize)
+                </td>
+                <td>
+                    @if (@item.Status == "ACTIVE")
+                    {
+                        <span class="btn btn-success">ACTIVE</span>
+                    }
+                    else
+                    {
+                        <span class="btn btn-danger">DEACTIVE</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
             }
         </tbody>
     </table>
