@@ -1,26 +1,23 @@
-﻿@model eProjectNetCore.Models.User
-
+﻿@model eProjectNetCore.Models.Account
 @{
-    Layout = "_Admin";
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Details</title>
-</head>
-<body>
-
+<div class="site-section courses-title pb-0" id="courses-section">
+    <div class="container">
+        <div class="row mb-5 justify-content-center">
+            <div class="col-lg-7 text-center" data-aos="fade-up" data-aos-delay="">
+                <h2 class="section-title">Details</h2>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-4">
     <div>
-        <h4>User</h4>
+        <h4>Account</h4>
         <hr />
         <table class="table">
-            <tr>
-                <td>@Html.DisplayNameFor(model => model.Name)</td>
-                <td>@Html.DisplayFor(model => model.Name)</td>
-            </tr>
             <tr>
                 <td>@Html.DisplayNameFor(model => model.Name)</td>
                 <td>@Html.DisplayFor(model => model.Name)</td>
@@ -42,21 +39,16 @@
                 <td>@Html.DisplayFor(model => model.Address)</td>
             </tr>
             <tr>
-                <td>@Html.DisplayNameFor(model => model.Group)</td>
-                <td>@Html.DisplayFor(model => model.Group.Name)</td>
+                <td>@Html.DisplayNameFor(model => model.Password)</td>
+                <td>@Html.DisplayFor(model => model.Password)</td>
             </tr>
             <tr>
                 <td>@Html.DisplayNameFor(model => model.Status)</td>
-                <td>
-                    @if (@Html.DisplayFor(model => model.Status).Equals("ACTIVE"))
-                    {
-                        <span>DEACTIVE</span>
-                    }
-                    else
-                    {
-                        <span>ACTIVE</span>
-                    }
-                </td>
+                <td>@Html.DisplayFor(model => model.Status)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.Birthday)</td>
+                <td>@Html.DisplayFor(model => model.Birthday)</td>
             </tr>
             <tr>
                 <td>@Html.DisplayNameFor(model => model.CreatedDate)</td>
@@ -66,12 +58,18 @@
                 <td>@Html.DisplayNameFor(model => model.UpdatedDate)</td>
                 <td>@Html.DisplayFor(model => model.UpdatedDate)</td>
             </tr>
-
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.UpdatedDate)</td>
+                <td>@Html.DisplayFor(model => model.UpdatedDate)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.Class)</td>
+                <td>@Html.DisplayFor(model => model.Class.Name)</td>
+            </tr>
         </table>
     </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a> |
+        <a asp-action="Index" class="btn btn-primary">Back to List</a>
+    </div>
 </div>
-</body>
-</html>

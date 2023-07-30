@@ -1,10 +1,10 @@
-﻿
+﻿@model eProjectNetCore.Models.Competition
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="site-section courses-title" id="courses-section">
+<div class="site-section courses-title pb-0" id="courses-section">
     <div class="container">
         <div class="row mb-5 justify-content-center">
             <div class="col-lg-7 text-center" data-aos="fade-up" data-aos-delay="">
@@ -15,21 +15,160 @@
 </div>
 <div class="container mt-4">
     <!-- Phần tiêu đề -->
-    <h1 class="text-center">Tên Cuộc Thi</h1>
+    <div class="row">
+        <div class="cold-md-6">
 
-    <!-- Phần ảnh cuộc thi -->
-    <div class="text-center my-4">
-        <img src="duong-dan-den-anh-cuoc-thi.jpg" alt="Ảnh Cuộc Thi" style="max-width: 100%; height: auto;">
-    </div>
+            <h3 class="text-center">Contest Name: @Model.Name</h3>
 
-    <!-- Phần mô tả cuộc thi -->
-    <div class="my-4">
-        <h2>Mô Tả Cuộc Thi</h2>
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel odio sed quam elementum lobortis. Donec ac augue quis metus lacinia lacinia. Proin blandit metus id est laoreet elementum. Nullam facilisis tincidunt neque vel euismod. Etiam venenatis bibendum ipsum, nec hendrerit est aliquam quis. Nulla ut lorem non justo congue accumsan sit amet nec risus. Duis a est eu urna facilisis scelerisque. Aenean consequat dolor in posuere finibus. Sed mattis felis sed augue feugiat dapibus. Fusce vitae consectetur justo. Integer vel nunc quis velit lacinia varius.
-        </p>
-        <p>
-            Nullam eleifend euismod mauris, eu varius lectus ullamcorper ac. Quisque semper nibh nec nunc dictum faucibus. Etiam ullamcorper, mauris sit amet rhoncus blandit, neque purus ultricies velit, sit amet condimentum massa tellus id justo. Integer dictum vel est vel vestibulum. Integer feugiat diam eget mi venenatis tristique. Integer tincidunt dolor nec libero consectetur cursus. Etiam aliquam facilisis ex, non consectetur nibh hendrerit vel. Nam aliquam libero vitae augue tincidunt, ut egestas ex pulvinar.
-        </p>
+            <!-- Phần ảnh cuộc thi -->
+            <div class="text-center my-4">
+                <img src="~/admin/@Model.Image" alt="Ảnh Cuộc Thi" style="max-width: 60%; height: auto;">
+            </div>
+        </div>
+
+        <div class="cold-md-6">
+            <div class="ml-5">
+                <h2>Contest Information</h2>
+                <p>
+                    @Model.Description
+                </p>
+            </div>
+        </div>
     </div>
+    @{
+        var user = ViewBag.user;
+        var project = ViewBag.project;
+    }
+    @if (user == null)
+    {
+        <div class="text-center">
+            <a asp-controller="Login" asp-action="Index" class="btn btn-success"><span>Login to enter the contest</span></a>
+        </div>
+    }
+    else
+    {
+        
+        <div class="site-section bg-light" id="contact-section">
+            <div class="container">
+
+                <div class="row justify-content-center">
+                    <div class="col-md-7">
+                        <h2 class="section-title mb-3">Submissions</h2>
+                        <p class="mb-5">Please enter your entry information</p>
+                        @if (project == null)
+                        {
+                            <form action="/Project/Create" method="POST" enctype="multipart/form-data">
+                                <input type="text" name="CompetitionId" value="@Model.Id" hidden>
+                                <div class="form-group row">
+                                    <div class="col-md-6 mb-3 mb-lg-0">
+                                        <div class="preview">
+                                            <img id="img-preview" src="" />
+
+                                            <label for="file-input">Upload Image</label>
+                                            <input accept="image/*" name="Image" type="file" id="file-input" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="number" name="Price" class="form-control" placeholder="Price">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-12">
+                                        <textarea class="form-control" name="Description" cols="30" rows="10" placeholder="Write your message here."></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+
+                                        <input type="submit" class="btn btn-primary py-3 px-5 btn-block btn-pill" value="Submit">
+                                    </div>
+                                </div>
+
+                            </form>
+                        }
+                        else
+                        {
+                            <h3>You have to write the post</h3>
+                            <form action="/Project/Edit" method="POST" enctype="multipart/form-data">
+                                <input type="hidden" name="idUpdate" value="@project.Id"/>
+                                <input type="text" name="Id" value="@project.Id" hidden>
+                                <div class="form-group row">
+                                    <div class="col-md-6 mb-3 mb-lg-0">
+                                        <div class="preview">
+                                            <img id="img-preview" src="" />
+
+                                            <label for="file-input">Upload Image</label>
+                                            <input accept="image/*" name="Image" value="@project.Image" type="file" id="file-input" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="number" name="Price" value="@project.Price" class="form-control" placeholder="Price">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-12">
+                                        <textarea class="form-control" name="Description" cols="30" rows="10" placeholder="Write your message here.">@project.Description</textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+
+                                        <input type="submit" class="btn btn-primary py-3 px-5 btn-block btn-pill" value="Update">
+                                    </div>
+                                </div>
+
+                            </form>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+<style>
+    #file-input {
+        display: none;
+    }
+
+    .preview {
+        padding: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+        max-width: 350px;
+        margin: auto;
+        background-color: rgb(255, 255, 255);
+        box-shadow: 0 0 20px rgba(170, 170, 170, 0.2);
+    }
+
+    img {
+        width: 100%;
+        object-fit: cover;
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: 600;
+        cursor: pointer;
+        color: #fff;
+        border-radius: 8px;
+        padding: 10px 20px;
+        background-color: rgb(101, 101, 255);
+    }
+</style>
+<script>
+    const input = document.getElementById('file-input');
+    const image = document.getElementById('img-preview');
+
+    input.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+            const src = URL.createObjectURL(e.target.files[0]);
+            image.src = src;
+        }
+    });
+</script>

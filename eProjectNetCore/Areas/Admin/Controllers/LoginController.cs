@@ -49,11 +49,13 @@ namespace eProjectNetCore.Areas.Admin.Controllers
             var acc = db.User.FirstOrDefault(x => x.UserName == userName && x.Password == md5pass);
             if(acc != null)
             {
+                HttpContext.Session.SetString("AdminId", acc.Id);
                 var identity = new ClaimsIdentity(new[] {
-                new Claim(ClaimTypes.Name, userName)
-                }, "BkapSecurityScheme");
+                new Claim(ClaimTypes.Name, userName),
+                new Claim(ClaimTypes.Sid, acc.Id)
+                }, "AdminSecurityScheme");
                 var pricipal = new ClaimsPrincipal(identity);
-                HttpContext.SignInAsync("BkapSecurityScheme", pricipal);
+                HttpContext.SignInAsync("AdminSecurityScheme", pricipal);
                 return RedirectToAction("Index", "Dashboard");
             } else
             {
@@ -65,7 +67,8 @@ namespace eProjectNetCore.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Logout()
         {
-            HttpContext.SignOutAsync("BkapSecurityScheme");
+            HttpContext.SignOutAsync("AdminSecurityScheme");
+            HttpContext.Session.Remove("AdminId");
             return RedirectToAction("Index", "Login");
         }
     }

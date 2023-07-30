@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace eProjectNetCore
 {
@@ -26,7 +27,7 @@ namespace eProjectNetCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication("BkapSecurityScheme").AddCookie("BkapSecurityScheme", ops =>
+            services.AddAuthentication("AdminSecurityScheme").AddCookie("AdminSecurityScheme", ops =>
             {
                 ops.Cookie = new CookieBuilder
                 {
@@ -40,16 +41,20 @@ namespace eProjectNetCore
                 ops.ReturnUrlParameter = "urlRedirect";
                 ops.SlidingExpiration = true;
             });
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddDbContext<AppDbContext>(
                 options => options.UseSqlServer(
                 Configuration.GetConnectionString("AppConnection")
                 )
             );
-            services.AddSession();
+            services.AddSession(ops =>
+            {
+                ops.IdleTimeout = TimeSpan.FromHours(1);
+            });
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
+                options.CheckConsentNeeded = context => false;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 

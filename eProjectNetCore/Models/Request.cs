@@ -4,25 +4,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace eProjectNetCore.Models
 {
-    public partial class Account
+    public partial class Request
     {
-        public Account()
+        public Request()
         {
             Project = new HashSet<Project>();
         }
 
         public string Id { get; set; }
-        public string Name { get; set; }
-        public string Avatar { get; set; }
-        public string UserName { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public string Address { get; set; }
-        public string Password { get; set; }
-        [Column("class_id")]
-        public string ClassId { get; set; }
+        public string CompetitionId { get; set; }
+        public string StudentId { get; set; }
+        public string Image { get; set; }
+        public string Description { get; set; }
         public string Status { get; set; }
-        public DateTime? Birthday { get; set; }
         [Column("created_date")]
         public DateTime? CreatedDate { get; set; }
         [Column("updated_date")]

@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using eProjectNetCore.Data;
+using eProjectNetCore.Dto;
 using eProjectNetCore.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace eProjectNetCore.Controllers
 {
@@ -36,6 +39,19 @@ namespace eProjectNetCore.Controllers
             if (competition == null)
             {
                 return NotFound();
+            }
+            try {
+                var userDto = JsonConvert.DeserializeObject<UserDto>(HttpContext.Session.GetString("SessionUser"));
+                var account = await _context.Account
+                    .Include(a => a.Class)
+                    .FirstOrDefaultAsync(m => m.Id == userDto.id);
+                ViewBag.user = account;
+                var project = await _context.Project
+                    .FirstOrDefaultAsync(m => m.AccountId == userDto.id && m.CompetitionId == id);
+                ViewBag.project = project;
+            } catch (Exception e)
+            {
+                ViewBag.user = null;
             }
 
             return View(competition);

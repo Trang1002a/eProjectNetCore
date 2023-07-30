@@ -1,0 +1,71 @@
+﻿@model eProjectNetCore.Models.Project
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_Admin.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Project</h4>
+    <hr />
+    <table class="table">
+        <tr>
+            <td>@Html.DisplayNameFor(model => model.Image)</td>
+            <td><img src="@Html.DisplayFor(model => model.Image)" width="60" /></td>
+        </tr>
+        <tr>
+            <td>@Html.DisplayNameFor(model => model.Account)</td>
+            <td>@Html.DisplayFor(model => model.Account.Name)</td>
+        </tr>
+        <tr>
+            <td>@Html.DisplayNameFor(model => model.Competition)</td>
+            <td>@Html.DisplayFor(model => model.Competition.Name)</td>
+        </tr>
+        <tr>
+            <td>@Html.DisplayNameFor(model => model.Price)</td>
+            <td>@Html.DisplayFor(model => model.Price)</td>
+        </tr>
+        <tr>
+            <td>@Html.DisplayNameFor(model => model.Status)</td>
+            <td>@Html.DisplayFor(model => model.Status)</td>
+        </tr>
+        <tr>
+            <td>@Html.DisplayNameFor(model => model.UpdatedDate)</td>
+            <td>@Html.DisplayFor(model => model.UpdatedDate)</td>
+        </tr>
+        <tr>
+            <td>@Html.DisplayNameFor(model => model.UpdatedDate)</td>
+            <td>@Html.DisplayFor(model => model.UpdatedDate)</td>
+        </tr>
+        <tr>
+            <td>@Html.DisplayNameFor(model => model.Description)</td>
+            <td>@Html.DisplayFor(model => model.Description)</td>
+        </tr>
+    </table>
+</div>
+<div>
+    <div class="row mb-5">
+        <div class="col-md-4">
+            <form asp-action="Evaluate" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <div class="form-group">
+                    <label asp-for="Mark" class="control-label"></label>
+                    <input asp-for="Mark" min="0" max="100" type="number" class="form-control" />
+                    <span asp-validation-for="Mark" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Comment" class="control-label"></label>
+                    <textarea asp-for="Comment" class="form-control"></textarea>
+                    <span asp-validation-for="Comment" class="text-danger"></span>
+                </div>
+                <input type="submit" class="btn btn-warning" value="Evaluate"/>
+            </form>
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+</div>

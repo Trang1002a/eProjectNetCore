@@ -9,6 +9,7 @@ using eProjectNetCore.Data;
 using eProjectNetCore.Models;
 using eProjectNetCore.Utils;
 using X.PagedList;
+using System.IO;
 
 namespace eProjectNetCore.Areas.Admin.Controllers
 {
@@ -26,11 +27,12 @@ namespace eProjectNetCore.Areas.Admin.Controllers
         public async Task<IActionResult> Index(String name, int page = 1)
         {
             int limit = 10;
-            var account = await _context.Account.OrderBy(a => a.Id).ToPagedListAsync(page, limit);
+            var account = await _context.Account.Where(a => a.Status == "ACTIVE").Include(a => a.Class).OrderBy(a => a.Id).ToPagedListAsync(page, limit);
             if (!String.IsNullOrEmpty(name))
             {
-                account = await _context.Account.Where(a => a.Name.Contains(name)).OrderBy(a => a.Id).ToPagedListAsync(page, limit);
+                account = await _context.Account.Where(a => a.Status == "ACTIVE").Include(a => a.Class).Where(a => a.Name.Contains(name)).OrderBy(a => a.Id).ToPagedListAsync(page, limit);
             }
+
             return View(account);
         }
 
@@ -56,7 +58,8 @@ namespace eProjectNetCore.Areas.Admin.Controllers
         // GET: Admin/Accounts/Create
         public IActionResult Create()
         {
-            ViewData["ClassId"] = new SelectList(_context.Class, "Id", "Id");
+            List<Class> classes = _context.Class.Where(a => a.Status == "ACTIVE").ToList();
+            ViewBag.data = classes;
             return View();
         }
 
@@ -65,10 +68,27 @@ namespace eProjectNetCore.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,UserName,Email,Phone,Address,Password,ClassId,Status,Birthday,CreatedDate,UpdatedDate")] Account account)
+        public async Task<IActionResult> Create([Bind("Id,Name,UserName,Email,Phone,Address,Password,ClassId,Status,Birthday,CreatedDate,UpdatedDate,Avatar")] Account account)
         {
             if (ModelState.IsValid)
             {
+                var files = HttpContext.Request.Form.Files;
+
+                if (files.Count() > 0 && files[0].Length > 0)
+                {
+                    var file = files[0];
+                    var FileName = file.FileName;
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\admin\\images\\avatar", FileName);
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                        account.Avatar = "images/avatar/" + FileName;
+                    }
+                }
+                String passwordMD5 = MD5Utils.MD5Hash(account.Password);
+                account.Password = passwordMD5;
+                account.CreatedDate = DateTime.Now;
+                account.UpdatedDate = DateTime.Now;
                 _context.Add(account);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -90,7 +110,8 @@ namespace eProjectNetCore.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["ClassId"] = new SelectList(_context.Class, "Id", "Id", account.ClassId);
+            List<Class> classes = _context.Class.Where(a => a.Status == "ACTIVE").ToList();
+            ViewBag.data = classes;
             return View(account);
         }
 
@@ -99,7 +120,7 @@ namespace eProjectNetCore.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,UserName,Email,Phone,Address,Password,ClassId,Status,Birthday,CreatedDate,UpdatedDate")] Account account)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,UserName,Email,Phone,Address,Password,ClassId,Status,Birthday,CreatedDate,UpdatedDate,Avatar")] Account account)
         {
             if (id != account.Id)
             {
@@ -110,6 +131,20 @@ namespace eProjectNetCore.Areas.Admin.Controllers
             {
                 try
                 {
+                    var files = HttpContext.Request.Form.Files;
+
+                    if (files.Count() > 0 && files[0].Length > 0)
+                    {
+                        var file = files[0];
+                        var FileName = file.FileName;
+                        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\admin\\images\\avatar", FileName);
+                        using (var stream = new FileStream(path, FileMode.Create))
+                        {
+                            file.CopyTo(stream);
+                            account.Avatar = "images/avatar/" + FileName;
+                        }
+                    }
+                    account.UpdatedDate = DateTime.Now;
                     _context.Update(account);
                     await _context.SaveChangesAsync();
                 }
@@ -150,18 +185,6 @@ namespace eProjectNetCore.Areas.Admin.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
-        // POST: Admin/Accounts/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var account = await _context.Account.FindAsync(id);
-            _context.Account.Remove(account);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
         private bool AccountExists(string id)
         {
             return _context.Account.Any(e => e.Id == id);

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using eProjectNetCore.Data;
 using eProjectNetCore.Models;
 using X.PagedList;
+using eProjectNetCore.Utils;
 
 namespace eProjectNetCore.Areas.Admin.Controllers
 {
@@ -25,10 +26,10 @@ namespace eProjectNetCore.Areas.Admin.Controllers
         public async Task<IActionResult> Index(String name, int page = 1)
         {
             int limit = 10;
-            var account = await _context.User.OrderBy(a => a.Id).ToPagedListAsync(page, limit);
+            var account = await _context.User.Include(a => a.Group).OrderBy(a => a.Id).ToPagedListAsync(page, limit);
             if (!String.IsNullOrEmpty(name))
             {
-                account = await _context.User.Where(a => a.Name.Contains(name)).OrderBy(a => a.Id).ToPagedListAsync(page, limit);
+                account = await _context.User.Include(a => a.Group).Where(a => a.Name.Contains(name)).OrderBy(a => a.Id).ToPagedListAsync(page, limit);
             }
             return View(account);
         }
@@ -68,6 +69,8 @@ namespace eProjectNetCore.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                String passwordMD5 = MD5Utils.MD5Hash(user.Password);
+                user.Password = passwordMD5;
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

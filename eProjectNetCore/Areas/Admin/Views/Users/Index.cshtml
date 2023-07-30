@@ -65,10 +65,17 @@
                         @Html.DisplayFor(modelItem => item.Phone)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Status)
+                        @if (@item.Status == "ACTIVE")
+                        {
+                            <span class="btn btn-success">ACTIVE</span>
+                        }
+                        else
+                        {
+                            <span class="btn btn-danger">DEACTIVE</span>
+                        }
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Group.Id)
+                        @Html.DisplayFor(modelItem => item.Group.Name)
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a> |

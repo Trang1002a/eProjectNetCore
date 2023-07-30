@@ -19,6 +19,8 @@ Create table class (
 	created_date DATETIME default(CURRENT_TIMESTAMP),
 	updated_date DATETIME default(CURRENT_TIMESTAMP)
 )
+select * from account
+update account set status = 'ACTIVE';
 Create table account (
 	id varchar(50) primary key,
 	name varchar(100),
@@ -27,6 +29,7 @@ Create table account (
 	phone varchar(100),
 	address varchar(100),
 	password varchar(100),
+	avatar varchar(100),
 	class_id varchar(50),
 	status varchar(20),
 	birthday DATETIME,
@@ -34,6 +37,8 @@ Create table account (
 	updated_date DATETIME default(CURRENT_TIMESTAMP)
 	Foreign key (class_id) references class(id),
 )
+select * from project
+delete project where id = 'e33fbfea-bcd3-46d5-a2ae-1c751ad73dcd';
 Create table project (
 	id varchar(50) primary key,
 	image varchar(255),
@@ -47,7 +52,25 @@ Create table project (
 	Foreign key (competitionId) references competition(id),
 	Foreign key (accountId) references account(id)
 )
-
+drop table project
+Create table project (
+	id varchar(50) primary key,
+	image varchar(255),
+	description text,
+	accountId varchar(50),
+	price float,
+	created_date DATETIME default(CURRENT_TIMESTAMP),
+	updated_date DATETIME,
+	status varchar(20),
+	comment text,
+	mark int,
+	userId varchar(50),
+	competitionId varchar(50),
+	Foreign key (competitionId) references competition(id),
+	Foreign key (accountId) references account(id),
+	Foreign key (userId) references [user](id)
+)
+select * from project
 Create table subject (
 	id varchar(50) primary key,
 	name varchar(250),
@@ -100,6 +123,18 @@ create table menu(
 	status varchar(20),
 	[order] tinyint,
 	Foreign key (groupId) references userGroup(id)
+)
+create table request(
+	id varchar(50) primary key,
+	competitionId varchar(50),
+	studentId varchar(50),
+	status varchar(20),
+	image varchar(255),
+	description text,
+	created_date DATETIME default(CURRENT_TIMESTAMP),
+	updated_date DATETIME default(CURRENT_TIMESTAMP),
+	Foreign key (competitionId) references competition(id),
+	Foreign key (studentId) references account(id)
 )
 Insert into userGroup(id, name, status) VALUES 
 (1, 'ADMIN', 'ACTIVE'),

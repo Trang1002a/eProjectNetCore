@@ -2,7 +2,6 @@
 
 @{
     Layout = "_Admin";
-    List<Class> classes = ViewBag.classes;
 }
 
 <!DOCTYPE html>
@@ -18,7 +17,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -29,6 +28,11 @@
                 <label asp-for="UserName" class="control-label"></label>
                 <input asp-for="UserName" class="form-control" />
                 <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Avatar" class="control-label"></label>
+                <input asp-for="Avatar" type="file" class="form-control" />
+                <span asp-validation-for="Avatar" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
@@ -52,13 +56,28 @@
             </div>
             <div class="form-group">
                 <label asp-for="ClassId" class="control-label"></label>
-                <select asp-for="ClassId" class="form-control" asp-items="ViewBag.ClassId"></select>
+                <select asp-for="ClassId" class="form-select" aria-label="Default select example">
+                    @if (ViewBag.data != null)
+                    {
+                        @foreach (var item in ViewBag.data)
+                        {
+                            <option asp-for="ClassId" value="@item.Id">@item.Name</option>
+                        }
+                    }
+                </select>
                 <span asp-validation-for="ClassId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
+            <div class="form-check">
+                <input checked asp-for="Status" value="ACTIVE" class="form-check-input" type="radio">
+                <label class="form-check-label" for="flexRadioDefault1">
+                    ACTIVE
+                </label>
+            </div>
+            <div class="form-check">
+                <input asp-for="Status" value="DEACTIVE" class="form-check-input" type="radio">
+                <label class="form-check-label" for="flexRadioDefault2">
+                    DEACTIVE
+                </label>
             </div>
             <div class="form-group">
                 <label asp-for="Birthday" class="control-label"></label>
@@ -66,24 +85,14 @@
                 <span asp-validation-for="Birthday" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UpdatedDate" class="control-label"></label>
-                <input asp-for="UpdatedDate" class="form-control" />
-                <span asp-validation-for="UpdatedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-success mt-3" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-primary mt-3">Back to List</a>
 </div>
 
 </body>

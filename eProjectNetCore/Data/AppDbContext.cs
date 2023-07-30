@@ -11,6 +11,7 @@ namespace eProjectNetCore.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         public DbSet<Account> Account { get; set; }
+        public DbSet<Project> Project { get; set; }
         public DbSet<Class> Class { get; set; }
 
         public DbSet<UserGroup> UserGroup { get; set; }

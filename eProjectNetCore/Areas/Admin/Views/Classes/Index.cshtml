@@ -33,12 +33,6 @@
                 <th>
                     @Html.DisplayNameFor(model => model.FirstOrDefault().Status)
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().CreatedDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstOrDefault().UpdatedDate)
-                </th>
                 <th></th>
             </tr>
         </thead>
@@ -50,13 +44,14 @@
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Status)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CreatedDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UpdatedDate)
+                        @if (@item.Status == "ACTIVE")
+                        {
+                            <span class="btn btn-success">ACTIVE</span>
+                        }
+                        else
+                        {
+                            <span class="btn btn-danger">DEACTIVE</span>
+                        }
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a> |
