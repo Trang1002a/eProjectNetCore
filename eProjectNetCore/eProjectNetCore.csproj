@@ -14,7 +14,6 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="wwwroot\admin\images\competition\" />
     <Folder Include="wwwroot\admin\images\project\" />
   </ItemGroup>
 

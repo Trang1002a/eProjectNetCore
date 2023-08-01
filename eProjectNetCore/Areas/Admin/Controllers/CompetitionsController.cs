@@ -9,6 +9,7 @@ using eProjectNetCore.Data;
 using eProjectNetCore.Models;
 using X.PagedList;
 using System.IO;
+using System.Security.Claims;
 
 namespace eProjectNetCore.Areas.Admin.Controllers
 {
@@ -26,11 +27,12 @@ namespace eProjectNetCore.Areas.Admin.Controllers
         public async Task<IActionResult> Index(String name, int page = 1)
         {
             int limit = 10;
-            var account = await _context.Competition.OrderBy(a => a.Id).ToPagedListAsync(page, limit);
+            var account = await _context.Competition.Where(a => a.Status == "ACTIVE").OrderBy(a => a.Id).ToPagedListAsync(page, limit);
             if (!String.IsNullOrEmpty(name))
             {
-                account = await _context.Competition.Where(a => a.Name.Contains(name)).OrderBy(a => a.Id).ToPagedListAsync(page, limit);
+                account = await _context.Competition.Where(a => a.Status == "ACTIVE").Where(a => a.Name.Contains(name)).OrderBy(a => a.Id).ToPagedListAsync(page, limit);
             }
+            ViewBag.menu = Load();
             return View(account);
         }
 
@@ -48,13 +50,14 @@ namespace eProjectNetCore.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.menu = Load();
             return View(competition);
         }
 
         // GET: Admin/Competitions/Create
         public IActionResult Create()
         {
+            ViewBag.menu = Load();
             return View();
         }
 
@@ -82,8 +85,10 @@ namespace eProjectNetCore.Areas.Admin.Controllers
                 }
                 _context.Add(competition);
                 await _context.SaveChangesAsync();
+                ViewBag.menu = Load();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.menu = Load();
             return View(competition);
         }
 
@@ -100,6 +105,7 @@ namespace eProjectNetCore.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+            ViewBag.menu = Load();
             return View(competition);
         }
 
@@ -146,8 +152,10 @@ namespace eProjectNetCore.Areas.Admin.Controllers
                         throw;
                     }
                 }
+                ViewBag.menu = Load();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.menu = Load();
             return View(competition);
         }
 
@@ -159,14 +167,17 @@ namespace eProjectNetCore.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var competition = await _context.Competition
+            var item = await _context.Competition
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (competition == null)
+            if (item == null)
             {
                 return NotFound();
             }
-
-            return View(competition);
+            item.Status = "DEACTIVE";
+            _context.Update(item);
+            await _context.SaveChangesAsync();
+            TempData["StatusSuccess"] = "Successfully";
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Admin/Competitions/Delete/5
@@ -177,12 +188,55 @@ namespace eProjectNetCore.Areas.Admin.Controllers
             var competition = await _context.Competition.FindAsync(id);
             _context.Competition.Remove(competition);
             await _context.SaveChangesAsync();
+            ViewBag.menu = Load();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CompetitionExists(string id)
         {
+            ViewBag.menu = Load();
             return _context.Competition.Any(e => e.Id == id);
+        }
+        public List<Menu> Load()
+        {
+            try
+            {
+                IEnumerable<Claim> claims = ((ClaimsIdentity)User.Identity).Claims;
+                if (claims.Count() > 0)
+                {
+                    var acc = "";
+                    foreach (var claim in claims)
+                    {
+                        acc = claim.Value;
+                    }
+                    var user = _context.User.FirstOrDefault(x => x.Id == acc);
+                    if (user != null)
+                    {
+                        var package = _context.Package.FirstOrDefault(m => m.GroupId == user.GroupId);
+                        if (package == null)
+                        {
+                            return new List<Menu>();
+                        }
+                        if (package != null)
+                        {
+                            List<Menu> menus = new List<Menu>();
+                            string[] menuId = package.MenuId.Split(",");
+                            List<string> lst = menuId.OfType<string>().ToList();
+                            foreach (var x in lst)
+                            {
+                                var menu = _context.Menu.FirstOrDefault(m => m.Id == x);
+                                menus.Add(menu);
+                            }
+                            return menus;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            return new List<Menu>();
         }
     }
 }

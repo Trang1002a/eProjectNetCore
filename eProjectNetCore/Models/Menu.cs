@@ -6,12 +6,9 @@ namespace eProjectNetCore.Models
     public partial class Menu
     {
         public string Id { get; set; }
-        public byte? GroupId { get; set; }
         public string Name { get; set; }
         public string Link { get; set; }
         public string Status { get; set; }
         public byte? Order { get; set; }
-
-        public UserGroup Group { get; set; }
     }
 }

@@ -14,6 +14,7 @@ namespace eProjectNetCore.Data
         public DbSet<Project> Project { get; set; }
         public DbSet<Class> Class { get; set; }
 
+        public DbSet<Package> Package { get; set; }
         public DbSet<UserGroup> UserGroup { get; set; }
 
         public DbSet<eProjectNetCore.Models.Menu> Menu { get; set; }

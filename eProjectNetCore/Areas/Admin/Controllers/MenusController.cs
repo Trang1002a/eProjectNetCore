@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using eProjectNetCore.Data;
 using eProjectNetCore.Models;
 using X.PagedList;
+using System.Security.Claims;
 
 namespace eProjectNetCore.Areas.Admin.Controllers
 {
@@ -25,11 +26,12 @@ namespace eProjectNetCore.Areas.Admin.Controllers
         public async Task<IActionResult> Index(String name, int page = 1)
         {
             int limit = 10;
-            var account = await _context.Menu.OrderBy(a => a.Id).ToPagedListAsync(page, limit);
+            var account = await _context.Menu.Where(a => a.Status == "ACTIVE").OrderBy(a => a.Id).ToPagedListAsync(page, limit);
             if (!String.IsNullOrEmpty(name))
             {
-                account = await _context.Menu.Where(a => a.Name.Contains(name)).OrderBy(a => a.Id).ToPagedListAsync(page, limit);
+                account = await _context.Menu.Where(a => a.Status == "ACTIVE").Where(a => a.Name.Contains(name)).OrderBy(a => a.Id).ToPagedListAsync(page, limit);
             }
+            ViewBag.menu = Load();
             return View(account);
         }
 
@@ -42,20 +44,19 @@ namespace eProjectNetCore.Areas.Admin.Controllers
             }
 
             var menu = await _context.Menu
-                .Include(m => m.Group)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (menu == null)
             {
                 return NotFound();
             }
-
+            ViewBag.menu = Load();
             return View(menu);
         }
 
         // GET: Admin/Menus/Create
         public IActionResult Create()
         {
-            ViewData["GroupId"] = new SelectList(_context.UserGroup, "Id", "Id");
+            ViewBag.menu = Load();
             return View();
         }
 
@@ -64,7 +65,7 @@ namespace eProjectNetCore.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,GroupId,Name,Link,Status,Order")] Menu menu)
+        public async Task<IActionResult> Create([Bind("Id,Name,Link,Status,Order")] Menu menu)
         {
             if (ModelState.IsValid)
             {
@@ -72,7 +73,7 @@ namespace eProjectNetCore.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GroupId"] = new SelectList(_context.UserGroup, "Id", "Id", menu.GroupId);
+            ViewBag.menu = Load();
             return View(menu);
         }
 
@@ -89,7 +90,7 @@ namespace eProjectNetCore.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["GroupId"] = new SelectList(_context.UserGroup, "Id", "Id", menu.GroupId);
+            ViewBag.menu = Load();
             return View(menu);
         }
 
@@ -98,7 +99,7 @@ namespace eProjectNetCore.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,GroupId,Name,Link,Status,Order")] Menu menu)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Link,Status,Order")] Menu menu)
         {
             if (id != menu.Id)
             {
@@ -123,9 +124,10 @@ namespace eProjectNetCore.Areas.Admin.Controllers
                         throw;
                     }
                 }
+                ViewBag.menu = Load();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GroupId"] = new SelectList(_context.UserGroup, "Id", "Id", menu.GroupId);
+            ViewBag.menu = Load();
             return View(menu);
         }
 
@@ -137,15 +139,17 @@ namespace eProjectNetCore.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var menu = await _context.Menu
-                .Include(m => m.Group)
+            var item = await _context.Menu
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (menu == null)
+            if (item == null)
             {
                 return NotFound();
             }
-
-            return View(menu);
+            item.Status = "DEACTIVE";
+            _context.Update(item);
+            await _context.SaveChangesAsync();
+            TempData["StatusSuccess"] = "Successfully";
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Admin/Menus/Delete/5
@@ -156,12 +160,56 @@ namespace eProjectNetCore.Areas.Admin.Controllers
             var menu = await _context.Menu.FindAsync(id);
             _context.Menu.Remove(menu);
             await _context.SaveChangesAsync();
+            ViewBag.menu = Load();
             return RedirectToAction(nameof(Index));
         }
 
         private bool MenuExists(string id)
         {
+            ViewBag.menu = Load();
             return _context.Menu.Any(e => e.Id == id);
+        }
+
+        public List<Menu> Load()
+        {
+            try
+            {
+                IEnumerable<Claim> claims = ((ClaimsIdentity)User.Identity).Claims;
+                if (claims.Count() > 0)
+                {
+                    var acc = "";
+                    foreach (var claim in claims)
+                    {
+                        acc = claim.Value;
+                    }
+                    var user = _context.User.FirstOrDefault(x => x.Id == acc);
+                    if (user != null)
+                    {
+                        var package = _context.Package.FirstOrDefault(m => m.GroupId == user.GroupId);
+                        if (package == null)
+                        {
+                            return new List<Menu>();
+                        }
+                        if (package != null)
+                        {
+                            List<Menu> menus = new List<Menu>();
+                            string[] menuId = package.MenuId.Split(",");
+                            List<string> lst = menuId.OfType<string>().ToList();
+                            foreach (var x in lst)
+                            {
+                                var menu = _context.Menu.FirstOrDefault(m => m.Id == x);
+                                menus.Add(menu);
+                            }
+                            return menus;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            return new List<Menu>();
         }
     }
 }

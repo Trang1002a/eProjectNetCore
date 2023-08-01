@@ -8,68 +8,74 @@
     <div class="container">
         <div class="row mb-5 justify-content-center">
             <div class="col-lg-7 text-center" data-aos="fade-up" data-aos-delay="">
-                <h2 class="section-title">Details</h2>
+                <h2 class="section-title">Profile</h2>
             </div>
         </div>
     </div>
 </div>
 <div class="container mt-4">
-    <div>
-        <h4>Account</h4>
-        <hr />
-        <table class="table">
-            <tr>
-                <td>@Html.DisplayNameFor(model => model.Name)</td>
-                <td>@Html.DisplayFor(model => model.Name)</td>
-            </tr>
-            <tr>
-                <td>@Html.DisplayNameFor(model => model.UserName)</td>
-                <td>@Html.DisplayFor(model => model.UserName)</td>
-            </tr>
-            <tr>
-                <td>@Html.DisplayNameFor(model => model.Email)</td>
-                <td>@Html.DisplayFor(model => model.Email)</td>
-            </tr>
-            <tr>
-                <td>@Html.DisplayNameFor(model => model.Phone)</td>
-                <td>@Html.DisplayFor(model => model.Phone)</td>
-            </tr>
-            <tr>
-                <td>@Html.DisplayNameFor(model => model.Address)</td>
-                <td>@Html.DisplayFor(model => model.Address)</td>
-            </tr>
-            <tr>
-                <td>@Html.DisplayNameFor(model => model.Password)</td>
-                <td>@Html.DisplayFor(model => model.Password)</td>
-            </tr>
-            <tr>
-                <td>@Html.DisplayNameFor(model => model.Status)</td>
-                <td>@Html.DisplayFor(model => model.Status)</td>
-            </tr>
-            <tr>
-                <td>@Html.DisplayNameFor(model => model.Birthday)</td>
-                <td>@Html.DisplayFor(model => model.Birthday)</td>
-            </tr>
-            <tr>
-                <td>@Html.DisplayNameFor(model => model.CreatedDate)</td>
-                <td>@Html.DisplayFor(model => model.CreatedDate)</td>
-            </tr>
-            <tr>
-                <td>@Html.DisplayNameFor(model => model.UpdatedDate)</td>
-                <td>@Html.DisplayFor(model => model.UpdatedDate)</td>
-            </tr>
-            <tr>
-                <td>@Html.DisplayNameFor(model => model.UpdatedDate)</td>
-                <td>@Html.DisplayFor(model => model.UpdatedDate)</td>
-            </tr>
-            <tr>
-                <td>@Html.DisplayNameFor(model => model.Class)</td>
-                <td>@Html.DisplayFor(model => model.Class.Name)</td>
-            </tr>
-        </table>
+    <div class="row">
+        <div class="col-4">
+            <div class="list-group" id="list-tab" role="tablist">
+                <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#information" role="tab" aria-controls="home">Information</a>
+                <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Exam Submitted</a>
+                <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#reset-password" role="tab" aria-controls="profile">Reset Password</a>
+                <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="information" role="tabpanel" aria-labelledby="list-home-list">
+                    <table class="table">
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.Name)</td>
+                            <td>@Html.DisplayFor(model => model.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.Avatar)</td>
+                            <td><img src="~/admin/@Html.DisplayFor(model => model.Avatar)" width="60" /></td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.UserName)</td>
+                            <td>@Html.DisplayFor(model => model.UserName)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.Email)</td>
+                            <td>@Html.DisplayFor(model => model.Email)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.Phone)</td>
+                            <td>@Html.DisplayFor(model => model.Phone)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.Address)</td>
+                            <td>@Html.DisplayFor(model => model.Address)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.Status)</td>
+                            <td>@Html.DisplayFor(model => model.Status)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.Birthday)</td>
+                            <td>@Html.DisplayFor(model => model.Birthday)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.Class)</td>
+                            <td>@Html.DisplayFor(model => model.Class.Name)</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="reset-password" role="tabpanel" aria-labelledby="list-profile-list">
+                    <a asp-action="ResetPassword" class="btn btn-primary">Reset Password</a>
+                </div>
+                <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
+                    <a asp-action="ExamSubmitted" class="btn btn-primary">Exam Submitted</a>
+                </div>
+                <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>
+            </div>
+        </div>
     </div>
     <div>
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a> |
-        <a asp-action="Index" class="btn btn-primary">Back to List</a>
+        
     </div>
 </div>

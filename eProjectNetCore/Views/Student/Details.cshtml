@@ -1,0 +1,69 @@
+﻿@model eProjectNetCore.Models.Project
+@{
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="site-section courses-title pb-0" id="courses-section">
+    <div class="container">
+        <div class="row mb-5 justify-content-center">
+            <div class="col-lg-7 text-center" data-aos="fade-up" data-aos-delay="">
+                <h2 class="section-title">Details</h2>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <table class="table">
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.Image)</td>
+                    <td><img src="~/admin/@Html.DisplayFor(model => model.Image)" width="60" /></td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.Account)</td>
+                    <td>@Html.DisplayFor(model => model.Account.Name)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.Competition)</td>
+                    <td>@Html.DisplayFor(model => model.Competition.Name)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.Price)</td>
+                    <td>@Html.DisplayFor(model => model.Price)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.Status)</td>
+                    <td>@Html.DisplayFor(model => model.Status)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.UpdatedDate)</td>
+                    <td>@Html.DisplayFor(model => model.UpdatedDate)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.UpdatedDate)</td>
+                    <td>@Html.DisplayFor(model => model.UpdatedDate)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.Description)</td>
+                    <td>@Html.DisplayFor(model => model.Description)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.Mark)</td>
+                    <td>@Html.DisplayFor(model => model.Mark)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.Comment)</td>
+                    <td>@Html.DisplayFor(model => model.Comment)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.User)</td>
+                    <td>@Html.DisplayFor(model => model.User.Name)</td>
+                </tr>
+            </table>
+            <a asp-controller="Competition" asp-action="Details" asp-route-id="@Model.Competition.Id" class="btn btn-warning">Edit</a>
+        </div>
+    </div>
+</div>
+

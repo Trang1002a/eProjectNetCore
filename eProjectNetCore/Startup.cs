@@ -37,6 +37,7 @@ namespace eProjectNetCore
                     SameSite = SameSiteMode.Lax,
                     SecurePolicy = CookieSecurePolicy.SameAsRequest
                 };
+                ops.ExpireTimeSpan = TimeSpan.FromMinutes(5);
                 ops.LoginPath = new PathString("/Admin/Login");
                 ops.ReturnUrlParameter = "urlRedirect";
                 ops.SlidingExpiration = true;

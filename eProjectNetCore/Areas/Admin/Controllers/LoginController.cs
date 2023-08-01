@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using eProjectNetCore.Data;
 using eProjectNetCore.Models;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace eProjectNetCore.Areas.Admin.Controllers
 {
@@ -42,7 +44,7 @@ namespace eProjectNetCore.Areas.Admin.Controllers
         {
             if (String.IsNullOrEmpty(userName) || String.IsNullOrEmpty(password))
             {
-                ViewBag.error = "Tài khoản hoặc mật khẩu không để trống";
+                ViewBag.error = "Account or password is not blank";
                 return View("Index");
             }
             var md5pass = MD5Utils.MD5Hash(password);
@@ -52,14 +54,14 @@ namespace eProjectNetCore.Areas.Admin.Controllers
                 HttpContext.Session.SetString("AdminId", acc.Id);
                 var identity = new ClaimsIdentity(new[] {
                 new Claim(ClaimTypes.Name, userName),
-                new Claim(ClaimTypes.Sid, acc.Id)
+                new Claim(ClaimTypes.Sid, acc.Id),
                 }, "AdminSecurityScheme");
                 var pricipal = new ClaimsPrincipal(identity);
                 HttpContext.SignInAsync("AdminSecurityScheme", pricipal);
                 return RedirectToAction("Index", "Dashboard");
             } else
             {
-                ViewBag.error = "Tài khoản hoặc mật khẩu không hợp lệ";
+                ViewBag.error = "Invalid account or password";
                 return View("Index");
             }
         }

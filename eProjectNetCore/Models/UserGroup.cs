@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace eProjectNetCore.Models
 {
@@ -7,15 +8,16 @@ namespace eProjectNetCore.Models
     {
         public UserGroup()
         {
-            Menu = new HashSet<Menu>();
             User = new HashSet<User>();
+
+            Package = new HashSet<Package>();
         }
 
         public byte Id { get; set; }
         public string Name { get; set; }
         public string Status { get; set; }
-
-        public ICollection<Menu> Menu { get; set; }
+        
         public ICollection<User> User { get; set; }
+        public ICollection<Package> Package { get; set; }
     }
 }

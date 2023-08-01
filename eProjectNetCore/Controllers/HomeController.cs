@@ -5,32 +5,54 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using eProjectNetCore.Models;
+using eProjectNetCore.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace eProjectNetCore.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly AppDbContext _context;
+
+        public HomeController(AppDbContext context)
+        {
+            _context = context;
+        }
         public IActionResult Index()
         {
+            List<Competition> competitions = _context.Competition.Where(com => com.Status == "ACTIVE").ToList();
+            ViewBag.data = competitions;
             return View();
         }
 
-        public IActionResult About()
+        public IActionResult Teachears()
         {
             ViewData["Message"] = "Your application description page.";
 
             return View();
         }
 
-        public IActionResult Contact()
+        public IActionResult Teachers()
         {
-            ViewData["Message"] = "Your contact page.";
-
+            List<User> users = _context.User
+                .Where(com => com.Status == "ACTIVE")
+                .Where(com => com.GroupId == 2)
+                .Take(3).ToList();
+            ViewBag.data = users;
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Exhibition()
         {
+            var accounts = _context.Project
+                .Include(p => p.Account)
+                .Include(p => p.Competition)
+                .Include(p => p.User)
+                .OrderBy(a => a.Id)
+                .Where(a => a.Status == "EXHIBITION")
+                .Take(3)
+                .ToList();
+            ViewBag.data = accounts;
             return View();
         }
 

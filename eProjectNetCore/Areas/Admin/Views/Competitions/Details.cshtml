@@ -35,7 +35,7 @@
             </tr>
             <tr>
                 <td>@Html.DisplayNameFor(model => model.Image)</td>
-                <td><img src="../../@Html.DisplayFor(model => model.Image)" width="60" /></td>
+                <td><img src="~/admin/@Html.DisplayFor(model => model.Image)" width="60" /></td>
             </tr>
             <tr>
                 <td>@Html.DisplayNameFor(model => model.EndDate)</td>
@@ -60,9 +60,9 @@
             </tr>
         </table>
     </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a> |
+        <a asp-action="Index" class="btn btn-primary">Back to List</a>
+    </div>
 </body>
 </html>

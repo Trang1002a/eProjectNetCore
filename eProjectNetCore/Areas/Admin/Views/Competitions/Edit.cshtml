@@ -22,32 +22,32 @@
                 <input type="hidden" asp-for="Id" />
                 <div class="form-group">
                     <label asp-for="Name" class="control-label"></label>
-                    <input asp-for="Name" class="form-control" />
+                    <input asp-for="Name" required class="form-control" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Image" class="control-label"></label>
-                    <input asp-for="Image" type="file" class="form-control" />
+                    <input asp-for="Image" value="@Model.Image" required type="file" class="form-control" />
                     <span asp-validation-for="Image" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Description" class="control-label"></label>
-                    <input asp-for="Description" class="form-control" />
+                    <input asp-for="Description" required class="form-control" />
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="StartDate" class="control-label"></label>
-                    <input asp-for="StartDate" class="form-control" />
+                    <input asp-for="StartDate" required class="form-control" />
                     <span asp-validation-for="StartDate" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="EndDate" class="control-label"></label>
-                    <input asp-for="EndDate" class="form-control" />
+                    <input asp-for="EndDate" required class="form-control" />
                     <span asp-validation-for="EndDate" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Prize" class="control-label"></label>
-                    <input asp-for="Prize" class="form-control" />
+                    <input asp-for="Prize" required class="form-control" />
                     <span asp-validation-for="Prize" class="text-danger"></span>
                 </div>
                 <div class="form-check">
@@ -63,7 +63,7 @@
                     </label>
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-success mt-3" />
+                    <input type="submit" value="Update" class="btn btn-success mt-3" />
                 </div>
             </form>
         </div>

@@ -22,27 +22,27 @@
                 <input type="hidden" asp-for="Id" />
                 <div class="form-group">
                     <label asp-for="Name" class="control-label"></label>
-                    <input asp-for="Name" class="form-control" />
+                    <input asp-for="Name" required class="form-control" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Email" class="control-label"></label>
-                    <input asp-for="Email" class="form-control" />
+                    <input asp-for="Email" required class="form-control" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="UserName" class="control-label"></label>
-                    <input asp-for="UserName" class="form-control" />
+                    <input asp-for="UserName" required disabled class="form-control" />
                     <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Phone" class="control-label"></label>
-                    <input asp-for="Phone" class="form-control" />
+                    <input asp-for="Phone" required class="form-control" />
                     <span asp-validation-for="Phone" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Address" class="control-label"></label>
-                    <input asp-for="Address" class="form-control" />
+                    <input asp-for="Address" required class="form-control" />
                     <span asp-validation-for="Address" class="text-danger"></span>
                 </div>
                 <div class="form-check">
@@ -59,11 +59,19 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="GroupId" class="control-label"></label>
-                    <select asp-for="GroupId" class="form-control" asp-items="ViewBag.GroupId"></select>
+                    <select asp-for="GroupId" class="form-select" aria-label="Default select example">
+                        @if (ViewBag.data != null)
+                        {
+                            @foreach (var item in ViewBag.data)
+                            {
+                                <option asp-for="ClassId" value="@item.Id">@item.Name</option>
+                            }
+                        }
+                    </select>
                     <span asp-validation-for="GroupId" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-success mt-3" />
+                    <input type="submit" value="Update" class="btn btn-success mt-3" />
                 </div>
             </form>
         </div>

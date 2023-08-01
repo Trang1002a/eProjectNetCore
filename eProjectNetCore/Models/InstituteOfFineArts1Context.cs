@@ -188,8 +188,6 @@ namespace eProjectNetCore.Models
                     .IsUnicode(false)
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.GroupId).HasColumnName("groupId");
-
                 entity.Property(e => e.Link)
                     .HasColumnName("link")
                     .HasMaxLength(50)
@@ -206,11 +204,6 @@ namespace eProjectNetCore.Models
                     .HasColumnName("status")
                     .HasMaxLength(20)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.Group)
-                    .WithMany(p => p.Menu)
-                    .HasForeignKey(d => d.GroupId)
-                    .HasConstraintName("FK__menu__groupId__3D5E1FD2");
             });
 
             modelBuilder.Entity<Project>(entity =>

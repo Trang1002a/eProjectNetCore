@@ -22,7 +22,11 @@ namespace eProjectNetCore.Controllers
         }
         public IActionResult Index()
         {
-            List<Competition> competitions = _context.Competition.Where(com => com.Status == "ACTIVE").ToList();
+            DateTime timeNow = DateTime.Now;
+            List<Competition> competitions = _context.Competition
+                .Where(com => com.Status == "ACTIVE")
+                .Where(com => com.EndDate > timeNow)
+                .ToList();
             ViewBag.data = competitions;
             return View();
         }
@@ -48,12 +52,15 @@ namespace eProjectNetCore.Controllers
                 ViewBag.user = account;
                 var project = await _context.Project
                     .FirstOrDefaultAsync(m => m.AccountId == userDto.id && m.CompetitionId == id);
-                ViewBag.project = project;
             } catch (Exception e)
             {
                 ViewBag.user = null;
             }
-
+            ViewBag.submit = false;
+            if (competition.EndDate > DateTime.Now)
+            {
+                ViewBag.submit = true;
+            }
             return View(competition);
         }
     }

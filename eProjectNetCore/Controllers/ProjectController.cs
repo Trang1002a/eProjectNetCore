@@ -54,7 +54,7 @@ namespace eProjectNetCore.Controllers
                 project.Status = "SUBMITTED";
                 _context.Add(project);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "");
+                return RedirectToAction("ExamSubmitted", "Student");
             }
             return View(project);
         }
@@ -102,11 +102,14 @@ namespace eProjectNetCore.Controllers
                     {
                         var file = files[0];
                         var FileName = file.FileName;
-                        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\admin\\images\\project", FileName);
-                        using (var stream = new FileStream(path, FileMode.Create))
+                        if(FileName != null)
                         {
-                            file.CopyTo(stream);
-                            project.Image = "images/project/" + FileName;
+                            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\admin\\images\\project", FileName);
+                            using (var stream = new FileStream(path, FileMode.Create))
+                            {
+                                file.CopyTo(stream);
+                                project.Image = "images/project/" + FileName;
+                            }
                         }
                     }
                     projectDB.UpdatedDate = DateTime.Now;
@@ -115,7 +118,7 @@ namespace eProjectNetCore.Controllers
                     projectDB.Description = project.Description;
                     _context.Update(projectDB);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction("Index", "");
+                    return RedirectToAction("ExamSubmitted", "Student");
                 }
                 catch (DbUpdateConcurrencyException)
                 {

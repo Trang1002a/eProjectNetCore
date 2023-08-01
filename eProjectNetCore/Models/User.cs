@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Claims;
 
 namespace eProjectNetCore.Models
 {
     public partial class User
     {
+        public static ClaimsIdentity Identity { get; internal set; }
         public string Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
@@ -19,7 +21,6 @@ namespace eProjectNetCore.Models
         public DateTime? CreatedDate { get; set; }
         [Column("updated_date")]
         public DateTime? UpdatedDate { get; set; }
-
         public UserGroup Group { get; set; }
     }
 }
